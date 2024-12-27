@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function UpdateModal({ student, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
     rollNumber: student.rollNumber,
-    subjectCodes: student.subjectCodes.join(', '),
+    subjectCodes: student?.subjectCodes?.join(", "),
     regulationYear: student.regulationYear,
-    semester: student.semester
+    semester: student.semester,
   });
 
   const handleChange = (e) => {
@@ -17,7 +17,7 @@ export default function UpdateModal({ student, onClose, onUpdate }) {
     e.preventDefault();
     const updatedData = {
       ...formData,
-      subjectCodes: formData.subjectCodes.split(',').map(code => code.trim())
+      subjectCodes: formData.subjectCodes.split(",").map((code) => code.trim()),
     };
     onUpdate(student._id, updatedData);
     onClose();
@@ -29,7 +29,9 @@ export default function UpdateModal({ student, onClose, onUpdate }) {
         <h2 className="text-xl font-bold mb-4">Update Student</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Roll Number</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Roll Number
+            </label>
             <input
               type="text"
               name="rollNumber"
@@ -39,7 +41,9 @@ export default function UpdateModal({ student, onClose, onUpdate }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Subject Codes</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Subject Codes
+            </label>
             <input
               type="text"
               name="subjectCodes"
@@ -49,7 +53,9 @@ export default function UpdateModal({ student, onClose, onUpdate }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Regulation Year</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Regulation Year
+            </label>
             <input
               type="text"
               name="regulationYear"
@@ -59,15 +65,19 @@ export default function UpdateModal({ student, onClose, onUpdate }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Semester</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Semester
+            </label>
             <select
               name="semester"
               value={formData.semester}
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
             >
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                <option key={sem} value={sem}>{sem}</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={sem}>
+                  {sem}
+                </option>
               ))}
             </select>
           </div>

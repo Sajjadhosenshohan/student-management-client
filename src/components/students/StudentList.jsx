@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
 import DeleteConfirmation from "./DeleteConfirmation";
 import UpdateModal from "./UpdateModal";
+import { axiosPublic } from "../../Hooks/utils";
 
 export default function StudentList() {
   const [students, setStudents] = useState([]);
@@ -16,11 +16,10 @@ export default function StudentList() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/students?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
+      const response = await axiosPublic.get(
+        `/students?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -38,33 +37,32 @@ export default function StudentList() {
     fetchStudents();
   }, [currentPage, semester, searchCode]);
 
-  
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/students/${id}`, {
+      await axiosPublic.delete(`/students/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      toast.success('Student deleted successfully');
+      toast.success("Student deleted successfully");
       setShowDeleteConfirm(false);
       fetchStudents();
     } catch (error) {
-      toast.error('Failed to delete student');
+      toast.error("Failed to delete student");
     }
   };
 
   const handleUpdate = async (id, updatedData) => {
     try {
-      await axios.put(`http://localhost:3000/students/${id}`, updatedData, {
+      await axiosPublic.put(`/students/${id}`, updatedData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      toast.success('Student updated successfully');
+      toast.success("Student updated successfully");
       fetchStudents();
     } catch (error) {
-      toast.error('Failed to update student');
+      toast.error("Failed to update student");
     }
   };
 
@@ -124,12 +122,12 @@ export default function StudentList() {
                     {student.rollNumber}
                   </td>
                   <td className="px-6 py-4">
-                    {student.subjectCodes.join(", ")}
+                    {student?.subjectCodes?.join(", ")}
                   </td>
                   <td className="px-6 py-4">{student.regulationYear}</td>
                   <td className="px-6 py-4">{student.semester}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                  <button
+                    <button
                       onClick={() => {
                         setSelectedStudent(student);
                         setShowUpdateModal(true);
@@ -175,29 +173,28 @@ export default function StudentList() {
             Next
           </button>
         </div>
-
       </div>
-        {showUpdateModal && selectedStudent && (
-          <UpdateModal
-            student={selectedStudent}
-            onClose={() => {
-              setShowUpdateModal(false);
-              setSelectedStudent(null);
-            }}
-            onUpdate={handleUpdate}
-          />
-        )}
+      {showUpdateModal && selectedStudent && (
+        <UpdateModal
+          student={selectedStudent}
+          onClose={() => {
+            setShowUpdateModal(false);
+            setSelectedStudent(null);
+          }}
+          onUpdate={handleUpdate}
+        />
+      )}
 
-        {showDeleteConfirm && selectedStudent && (
-          <DeleteConfirmation
-            student={selectedStudent}
-            onConfirm={() => handleDelete(selectedStudent._id)}
-            onCancel={() => {
-              setShowDeleteConfirm(false);
-              setSelectedStudent(null);
-            }}
-          />
-        )}
+      {showDeleteConfirm && selectedStudent && (
+        <DeleteConfirmation
+          student={selectedStudent}
+          onConfirm={() => handleDelete(selectedStudent._id)}
+          onCancel={() => {
+            setShowDeleteConfirm(false);
+            setSelectedStudent(null);
+          }}
+        />
+      )}
     </div>
   );
 }

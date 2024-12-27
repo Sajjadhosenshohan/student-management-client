@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { axiosPublic } from "../../Hooks/utils";
 
 export default function AddStudent() {
   const [formData, setFormData] = useState({
-    rollNumber: '',
-    subjectCodes: '',
-    regulationYear: '',
-    semester: ''
+    rollNumber: "",
+    subjectCodes: "",
+    regulationYear: "",
+    semester: "",
   });
   const navigate = useNavigate();
 
@@ -21,18 +21,20 @@ export default function AddStudent() {
     try {
       const dataToSend = {
         ...formData,
-        subjectCodes: formData.subjectCodes.split(',').map(code => code.trim())
+        subjectCodes: formData.subjectCodes
+          .split(",")
+          .map((code) => code.trim()),
       };
-      
-      await axios.post('http://localhost:3000/students', dataToSend, {
+
+      await axiosPublic.post("/students", dataToSend, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      toast.success('Student added successfully!');
-      navigate('/students');
+      toast.success("Student added successfully!");
+      navigate("/students");
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to add student');
+      toast.error(error.response?.data?.message || "Failed to add student");
     }
   };
 
@@ -40,11 +42,13 @@ export default function AddStudent() {
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Add Student</h1>
-        
+
         <div className="bg-white p-6 rounded-lg shadow-md">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Roll Number</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Roll Number
+              </label>
               <input
                 type="text"
                 name="rollNumber"
@@ -54,7 +58,9 @@ export default function AddStudent() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Subject Codes (comma-separated)</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Subject Codes (comma-separated)
+              </label>
               <input
                 type="text"
                 name="subjectCodes"
@@ -65,7 +71,9 @@ export default function AddStudent() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Regulation Year</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Regulation Year
+              </label>
               <input
                 type="text"
                 name="regulationYear"
@@ -75,7 +83,9 @@ export default function AddStudent() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Semester</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Semester
+              </label>
               <select
                 name="semester"
                 required
@@ -83,8 +93,10 @@ export default function AddStudent() {
                 onChange={handleChange}
               >
                 <option value="">Select Semester</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                  <option key={sem} value={sem}>{sem}</option>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                  <option key={sem} value={sem}>
+                    {sem}
+                  </option>
                 ))}
               </select>
             </div>
@@ -97,7 +109,7 @@ export default function AddStudent() {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate("/")}
                 className="flex-1 py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-700"
               >
                 Cancel
