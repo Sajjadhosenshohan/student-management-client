@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { axiosPublic } from "../../Hooks/utils";
 
- export default function Register() {
+export default function Register() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
+    name: "",
+    email: "",
+    password: "",
   });
   const navigate = useNavigate();
 
@@ -18,11 +18,11 @@ import axios from 'axios';
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/auth/register', formData);
-      toast.success('Registration successful! Please login.');
-      navigate('/login');
+      await axiosPublic.post("/auth/register", formData);
+      toast.success("Registration successful! Please login.");
+      navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      toast.error(error.response?.data?.message || "Registration failed");
     }
   };
 
@@ -32,7 +32,9 @@ import axios from 'axios';
         <h2 className="text-3xl font-bold text-center">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
             <input
               type="text"
               name="name"
@@ -42,7 +44,9 @@ import axios from 'axios';
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -52,7 +56,9 @@ import axios from 'axios';
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -69,7 +75,7 @@ import axios from 'axios';
           </button>
         </form>
         <p className="text-center">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-blue-600 hover:text-blue-800">
             Login
           </Link>
