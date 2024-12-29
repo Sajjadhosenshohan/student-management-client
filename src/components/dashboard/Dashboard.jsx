@@ -28,7 +28,10 @@ export default function Dashboard() {
     formDataToSend.append("file", file);
     formDataToSend.append("regulationYear", formData.regulationYear);
     formDataToSend.append("semester", formData.semester);
-
+    // Log the FormData entries
+    for (let [key, value] of formDataToSend.entries()) {
+      console.log(`${key}:`, value);
+    }
     try {
       const response = await axiosPublic.post("/upload", formDataToSend, {
         headers: {
@@ -41,7 +44,12 @@ export default function Dashboard() {
       toast.success("File uploaded successfully!");
     } catch (error) {
       setLoading(false);
-      toast.error("Upload failed");
+      console.log(error);
+      toast.error(
+        error?.response?.data?.error?.message ||
+          error?.message ||
+          "Upload failed"
+      );
     }
   };
 
