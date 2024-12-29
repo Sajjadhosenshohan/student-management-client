@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
 import DeleteConfirmation from "./DeleteConfirmation";
 import UpdateModal from "./UpdateModal";
+import { axiosPublic } from "../../Hooks/utils";
 
 export default function StudentList() {
   const [students, setStudents] = useState([]);
@@ -19,8 +19,8 @@ export default function StudentList() {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/students?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
+      const response = await axiosPublic.get(
+        `/students?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -41,7 +41,7 @@ export default function StudentList() {
   
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://student-management-server-production.up.railway.app/students/${id}`, {
+      await axiosPublic.delete(`/students/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -56,7 +56,7 @@ export default function StudentList() {
 
   const handleUpdate = async (id, updatedData) => {
     try {
-      await axios.put(`https://student-management-server-production.up.railway.app/students/${id}`, updatedData, {
+      await axiosPublic.put(`/students/${id}`, updatedData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -67,6 +67,7 @@ export default function StudentList() {
       toast.error('Failed to update student');
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -119,15 +120,15 @@ export default function StudentList() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {students.map((student) => (
-                <tr key={student._id}>
+                <tr key={student?._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {student.rollNumber}
+                    {student?.rollNumber}
                   </td>
                   <td className="px-6 py-4">
-                    {student.subjectCodes.join(", ")}
+                    {student?.subjectCodes?.join(", ")}
                   </td>
-                  <td className="px-6 py-4">{student.regulationYear}</td>
-                  <td className="px-6 py-4">{student.semester}</td>
+                  <td className="px-6 py-4">{student?.regulationYear}</td>
+                  <td className="px-6 py-4">{student?.semester}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                   <button
                       onClick={() => {

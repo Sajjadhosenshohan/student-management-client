@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { axiosPublic } from "../../Hooks/utils";
 
 export default function Dashboard() {
   const [file, setFile] = useState(null);
@@ -29,18 +30,14 @@ export default function Dashboard() {
     formDataToSend.append("semester", formData.semester);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/upload",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axiosPublic.post("/upload", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setLoading(false);
-      console.log(response.data);
+      console.log(response, 40);
       toast.success("File uploaded successfully!");
     } catch (error) {
       setLoading(false);
