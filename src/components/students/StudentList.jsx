@@ -41,7 +41,7 @@ export default function StudentList() {
   
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/students/${id}`, {
+      await axios.delete(`https://student-management-server-production.up.railway.app/students/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -56,7 +56,7 @@ export default function StudentList() {
 
   const handleUpdate = async (id, updatedData) => {
     try {
-      await axios.put(`http://localhost:3000/students/${id}`, updatedData, {
+      await axios.put(`https://student-management-server-production.up.railway.app/students/${id}`, updatedData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

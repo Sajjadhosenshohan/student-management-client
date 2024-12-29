@@ -17,11 +17,16 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      
+      console.log('response')
       const response = await axios.post('http://localhost:3000/auth/login', formData);
+
+      console.log(response, 'response')
       localStorage.setItem('token', response.data.token);
       toast.success('Login successful!');
       navigate('/');
     } catch (error) {
+      console.log(error,"error")
       toast.error(error.response?.data?.message || 'Login failed');
     }
   };
