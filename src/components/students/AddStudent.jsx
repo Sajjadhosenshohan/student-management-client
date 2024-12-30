@@ -39,8 +39,8 @@ export default function AddStudent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-100 md:p-8">
+      <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Add Student</h1>
 
         <div className="bg-white p-6 rounded-lg shadow-md">

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { axiosPublic } from "../../Hooks/utils";
 
 export default function Dashboard() {
@@ -28,7 +27,10 @@ export default function Dashboard() {
     formDataToSend.append("file", file);
     formDataToSend.append("regulationYear", formData.regulationYear);
     formDataToSend.append("semester", formData.semester);
-
+    // Log the FormData entries
+    for (let [key, value] of formDataToSend.entries()) {
+      console.log(`${key}:`, value);
+    }
     try {
       const response = await axiosPublic.post("/upload", formDataToSend, {
         headers: {
@@ -41,13 +43,18 @@ export default function Dashboard() {
       toast.success("File uploaded successfully!");
     } catch (error) {
       setLoading(false);
-      toast.error("Upload failed");
+      console.log(error);
+      toast.error(
+        error?.response?.data?.error?.message ||
+          error?.message ||
+          "Upload failed"
+      );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-100 md:p-8">
+      <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
         <div className="bg-white p-6 rounded-lg shadow-md">
@@ -125,7 +132,7 @@ export default function Dashboard() {
           </form>
         </div>
 
-        <div className="mt-8 flex space-x-4">
+        {/* <div className="mt-8 flex space-x-4">
           <button
             onClick={() => navigate("/add-student")}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
@@ -138,7 +145,7 @@ export default function Dashboard() {
           >
             View All Students
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

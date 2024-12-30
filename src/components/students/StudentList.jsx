@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import DeleteConfirmation from "./DeleteConfirmation";
 import UpdateModal from "./UpdateModal";
 import { axiosPublic } from "../../Hooks/utils";
+import Pagination from "../common/Pagination";
 
 export default function StudentList() {
   const [students, setStudents] = useState([]);
@@ -15,7 +16,6 @@ export default function StudentList() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
 
   const fetchStudents = async () => {
     try {
@@ -38,7 +38,6 @@ export default function StudentList() {
     fetchStudents();
   }, [currentPage, semester, searchCode]);
 
-  
   const handleDelete = async (id) => {
     try {
       await axiosPublic.delete(`/students/${id}`, {
@@ -68,13 +67,12 @@ export default function StudentList() {
     }
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Student List</h1>
 
-        <div className="mb-6 flex space-x-4">
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <select
             value={semester}
             onChange={(e) => setSemester(e.target.value)}
@@ -97,7 +95,7 @@ export default function StudentList() {
           />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-x-auto">
           <table className="min-w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -130,7 +128,7 @@ export default function StudentList() {
                   <td className="px-6 py-4">{student?.regulationYear}</td>
                   <td className="px-6 py-4">{student?.semester}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                  <button
+                    <button
                       onClick={() => {
                         setSelectedStudent(student);
                         setShowUpdateModal(true);
@@ -155,50 +153,34 @@ export default function StudentList() {
           </table>
         </div>
 
-        <div className="mt-4 flex justify-center space-x-2">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 border rounded-md disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span className="px-4 py-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded-md disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
-        {showUpdateModal && selectedStudent && (
-          <UpdateModal
-            student={selectedStudent}
-            onClose={() => {
-              setShowUpdateModal(false);
-              setSelectedStudent(null);
-            }}
-            onUpdate={handleUpdate}
-          />
-        )}
 
-        {showDeleteConfirm && selectedStudent && (
-          <DeleteConfirmation
-            student={selectedStudent}
-            onConfirm={() => handleDelete(selectedStudent._id)}
-            onCancel={() => {
-              setShowDeleteConfirm(false);
-              setSelectedStudent(null);
-            }}
-          />
-        )}
+      {showUpdateModal && selectedStudent && (
+        <UpdateModal
+          student={selectedStudent}
+          onClose={() => {
+            setShowUpdateModal(false);
+            setSelectedStudent(null);
+          }}
+          onUpdate={handleUpdate}
+        />
+      )}
+
+      {showDeleteConfirm && selectedStudent && (
+        <DeleteConfirmation
+          student={selectedStudent}
+          onConfirm={() => handleDelete(selectedStudent._id)}
+          onCancel={() => {
+            setShowDeleteConfirm(false);
+            setSelectedStudent(null);
+          }}
+        />
+      )}
     </div>
   );
 }
