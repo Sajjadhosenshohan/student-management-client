@@ -3,8 +3,7 @@ import axios from "axios";
 export const axiosPublic = axios.create({
   // baseURL: "https://student-data-management-iota.vercel.app",
   // baseURL: "https://student-management-server-gilt.vercel.app",
-  // baseURL:
-  // "https://student-management-server-dswoojfg6-radiathossains-projects.vercel.app",
+  // baseURL:"https://student-management-server-dswoojfg6-radiathossains-projects.vercel.app",
   baseURL: "http://localhost:3000",
 });
 

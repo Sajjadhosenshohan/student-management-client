@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { axiosPublic } from "../../Hooks/utils";
+import { AuthContext } from "../../Auth/AuthProvider";
 
 export default function Register() {
+  const { register } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,9 +19,9 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosPublic.post("/auth/register", formData);
-      toast.success("Registration successful! Please login.");
-      navigate("/login");
+      await register(formData.name, formData.email, formData.password);
+      toast.success("Registration successful!");
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");
     }
