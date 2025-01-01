@@ -5,7 +5,7 @@ import { AuthContext } from '../../Auth/AuthProvider';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const {user,loading} = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const location = useLocation();
   
   const navigation = [
