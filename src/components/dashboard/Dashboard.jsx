@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { axiosPublic } from "../../Hooks/utils";
+import { useAxiosSecure } from "../../Hooks/useAxiosSecure";
 
 export default function Dashboard() {
+  const axiosSecure = useAxiosSecure();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ export default function Dashboard() {
       console.log(`${key}:`, value);
     }
     try {
-      const response = await axiosPublic.post("/upload", formDataToSend, {
+      const response = await axiosSecure.post("/upload", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import DeleteConfirmation from "./DeleteConfirmation";
 import UpdateModal from "./UpdateModal";
-import { axiosPublic } from "../../Hooks/utils";
 import Pagination from "../common/Pagination";
+import { useAxiosSecure } from "../../Hooks/useAxiosSecure";
 
 export default function StudentList() {
+  const axiosSecure = useAxiosSecure();
   const [students, setStudents] = useState([]);
   const [semester, setSemester] = useState("");
   const [searchCode, setSearchCode] = useState("");
@@ -19,7 +21,7 @@ export default function StudentList() {
 
   const fetchStudents = async () => {
     try {
-      const response = await axiosPublic.get(
+      const response = await axiosSecure.get(
         `/students?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
         {
           headers: {
@@ -40,7 +42,7 @@ export default function StudentList() {
 
   const handleDelete = async (id) => {
     try {
-      await axiosPublic.delete(`/students/${id}`, {
+      await axiosSecure.delete(`/students/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -55,7 +57,7 @@ export default function StudentList() {
 
   const handleUpdate = async (id, updatedData) => {
     try {
-      await axiosPublic.put(`/students/${id}`, updatedData, {
+      await axiosSecure.put(`/students/${id}`, updatedData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -67,6 +69,7 @@ export default function StudentList() {
     }
   };
 
+  console.log(students)
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { axiosPublic } from "../../Hooks/utils";
+import { useAxiosSecure } from "../../Hooks/useAxiosSecure";
 
 export default function AddStudent() {
+  const axiosSecure = useAxiosSecure();
+
   const [formData, setFormData] = useState({
     rollNumber: "",
     subjectCodes: "",
@@ -26,7 +28,7 @@ export default function AddStudent() {
           .map((code) => code.trim()),
       };
 
-      await axiosPublic.post("/students", dataToSend, {
+      await axiosSecure.post("/students", dataToSend, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
