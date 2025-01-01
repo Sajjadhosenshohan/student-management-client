@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAxiosSecure } from "../../Hooks/useAxiosSecure";
 
@@ -11,7 +10,7 @@ export default function Dashboard() {
     regulationYear: "",
     semester: "",
   });
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -33,14 +32,14 @@ export default function Dashboard() {
       console.log(`${key}:`, value);
     }
     try {
-      const response = await axiosSecure.post("/upload", formDataToSend, {
+      const response = await axiosSecure.post("/student/upload", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setLoading(false);
-      console.log(response, 40);
+      console.log(response, "response upload pdf ");
       toast.success("File uploaded successfully!");
     } catch (error) {
       setLoading(false);

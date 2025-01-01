@@ -15,9 +15,10 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserInfo = async (userId) => {
     try {
-      const response = await axiosSecure.get(`/auth/getUserInfo/${userId}`);
-
-      if (response.data.success) {
+      console.log(userId, "userid");
+      const response = await axiosSecure.get(`/user/${userId}`);
+      console.log(response, "response from fetchUserInfo");
+      if (response?.data.success) {
         return response.data.data;
       }
       throw new Error("Failed to fetch user info");
@@ -50,20 +51,20 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setLoading(true);
-      const response = await axiosPublic.post("/auth/login", {
+      const response = await axiosPublic.post("/user/login", {
         email,
         password,
       });
-
-      if (!response.data.success) {
-        throw new Error(response.data.message || "Login failed");
+      console.log(response?.data?.data, "login auth provider");
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message || "Login failed");
       }
 
-      const token = response.data.data.token;
+      const token = response?.data?.data?.accessToken;
       localStorage.setItem("token", token);
 
       const decoded = jwtDecode(token);
-      const userData = await fetchUserInfo(decoded.id);
+      const userData = await fetchUserInfo(decoded?.email);
       setUser(userData);
 
       return response;
@@ -78,22 +79,22 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       setLoading(true);
-      const response = await axiosPublic.post("/auth/register", {
+      const response = await axiosPublic.post("/user/create", {
         name,
         email,
         password,
       });
-
-      if (!response.data.success) {
+      console.log(response, "from auth provider");
+      if (!response?.data?.success) {
         throw new Error(response.data.message || "Registration failed");
       }
 
-      const token = response.data.data.token;
-      localStorage.setItem("token", token);
+      // const token = response?.data?.data?.token;
+      // localStorage.setItem("token", token);
 
-      const decoded = jwtDecode(token);
-      const userData = await fetchUserInfo(decoded.id);
-      setUser(userData);
+      // const decoded = jwtDecode(token);
+      // const userData = await fetchUserInfo(decoded.id);
+      // setUser(userData);
 
       toast.success("Registration successful!");
       return response;
@@ -116,8 +117,10 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
-    logout
+    logout,
   };
 
-  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+  );
 };

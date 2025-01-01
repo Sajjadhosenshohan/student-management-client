@@ -22,15 +22,18 @@ export default function StudentList() {
   const fetchStudents = async () => {
     try {
       const response = await axiosSecure.get(
-        `/students?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
+        `/student/all?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      setStudents(response.data.students);
-      setTotalPages(Math.ceil(response.data.total / studentsPerPage));
+      console.log(response,"response for student")
+      if (response) {
+        setStudents(response?.data?.data?.res);
+        setTotalPages(response?.data?.data?.meta?.totalPage);
+      }
     } catch (error) {
       toast.error("Failed to fetch students");
     }
@@ -42,34 +45,34 @@ export default function StudentList() {
 
   const handleDelete = async (id) => {
     try {
-      await axiosSecure.delete(`/students/${id}`, {
+      await axiosSecure.delete(`/student/delete/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      toast.success('Student deleted successfully');
+      toast.success("Student deleted successfully");
       setShowDeleteConfirm(false);
       fetchStudents();
     } catch (error) {
-      toast.error('Failed to delete student');
+      toast.error("Failed to delete student");
     }
   };
 
   const handleUpdate = async (id, updatedData) => {
     try {
-      await axiosSecure.put(`/students/${id}`, updatedData, {
+      await axiosSecure.patch(`/student/update/${id}`, updatedData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      toast.success('Student updated successfully');
+      toast.success("Student updated successfully");
       fetchStudents();
     } catch (error) {
-      toast.error('Failed to update student');
+      toast.error("Failed to update student");
     }
   };
 
-  console.log(students)
+  console.log(students);
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">

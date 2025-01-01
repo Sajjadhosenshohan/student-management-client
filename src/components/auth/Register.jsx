@@ -21,9 +21,9 @@ export default function Register() {
     try {
       await register(formData.name, formData.email, formData.password);
       toast.success("Registration successful!");
-      navigate("/");
+      navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed");
+      toast.error(error.response?.data?.data?.message || "Registration failed");
     }
   };
 

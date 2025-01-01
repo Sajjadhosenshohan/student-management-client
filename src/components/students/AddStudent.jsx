@@ -28,7 +28,7 @@ export default function AddStudent() {
           .map((code) => code.trim()),
       };
 
-      await axiosSecure.post("/students", dataToSend, {
+      await axiosSecure.post("/student/create", dataToSend, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
