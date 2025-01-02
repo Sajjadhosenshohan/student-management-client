@@ -22,14 +22,9 @@ export default function StudentList() {
   const fetchStudents = async () => {
     try {
       const response = await axiosSecure.get(
-        `/student/all?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `/student/all?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`
       );
-      console.log(response,"response for student")
+      // console.log(response,"response for student")
       if (response) {
         setStudents(response?.data?.data?.res);
         setTotalPages(response?.data?.data?.meta?.totalPage);
@@ -47,7 +42,7 @@ export default function StudentList() {
     try {
       await axiosSecure.delete(`/student/delete/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: ` ${localStorage.getItem("token")}`,
         },
       });
       toast.success("Student deleted successfully");
@@ -62,7 +57,7 @@ export default function StudentList() {
     try {
       await axiosSecure.patch(`/student/update/${id}`, updatedData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `${localStorage.getItem("token")}`,
         },
       });
       toast.success("Student updated successfully");
@@ -72,7 +67,7 @@ export default function StudentList() {
     }
   };
 
-  console.log(students);
+  // console.log(students);
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">

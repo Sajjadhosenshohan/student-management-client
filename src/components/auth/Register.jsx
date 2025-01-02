@@ -23,7 +23,8 @@ export default function Register() {
       toast.success("Registration successful!");
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.data?.message || "Registration failed");
+      console.log(error)
+      toast.error(error.response?.data?.message || "Registration failed");
     }
   };
 

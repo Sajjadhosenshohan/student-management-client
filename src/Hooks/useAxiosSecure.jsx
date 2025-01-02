@@ -3,8 +3,6 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../Auth/AuthProvider";
 
 const axiosSecure = axios.create({
-  // baseURL: 'http://localhost:3000',
-  // baseURL: 'https://student-management-server-production.up.railway.app',
   baseURL: "https://rpistudentmanagementserver.vercel.app/api/v1",
   // baseURL: "http://localhost:5000/api/v1",
   timeout: 300000,
@@ -22,7 +20,7 @@ export const useAxiosSecure = () => {
       (config) => {
         const token = localStorage.getItem("token");
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers.Authorization = `${token}`;
         }
         return config;
       },

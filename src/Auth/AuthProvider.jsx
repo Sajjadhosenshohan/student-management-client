@@ -15,9 +15,8 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserInfo = async (userId) => {
     try {
-      console.log(userId, "userid");
       const response = await axiosSecure.get(`/user/${userId}`);
-      console.log(response, "response from fetchUserInfo");
+      // console.log(response, "response from fetchUserInfo");
       if (response?.data.success) {
         return response.data.data;
       }
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const decoded = jwtDecode(token);
-          const userData = await fetchUserInfo(decoded.id);
+          const userData = await fetchUserInfo(decoded.email);
           setUser(userData);
         } catch (error) {
           console.error("Auth initialization error:", error);
@@ -55,7 +54,7 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       });
-      console.log(response?.data?.data, "login auth provider");
+      // console.log(response?.data?.data, "login auth provider");
       if (!response?.data?.success) {
         throw new Error(response?.data?.message || "Login failed");
       }
