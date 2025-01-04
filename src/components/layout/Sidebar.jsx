@@ -30,9 +30,11 @@ const Sidebar = () => {
       </button>
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-40  w-72 lg:w-80  bg-white text-black transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <div
+        className={`fixed inset-y-0 left-0 z-40  w-72    bg-white text-black transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="flex flex-col h-full">
           {/* Profile Section */}
           <div className="p-6 border-b border-gray-600">
@@ -59,8 +61,8 @@ const Sidebar = () => {
                   to={item.href}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     location.pathname === item.href
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-600 hover:bg-gray-800 hover:text-gray-300'
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-600 hover:bg-gray-800 hover:text-gray-300"
                   }`}
                 >
                   <Icon size={20} />
