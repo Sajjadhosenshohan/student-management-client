@@ -1,13 +1,16 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import DeleteConfirmation from "./DeleteConfirmation";
 import UpdateModal from "./UpdateModal";
 import Pagination from "../common/Pagination";
 import { useAxiosSecure } from "../../Hooks/useAxiosSecure";
-import Loader from "../common/Loader";
+import { AuthContext } from "../../Auth/AuthProvider";
+import { Download, Trash2 } from "lucide-react";
+import DownloadStudent from "./DownloadStudent";
 
 export default function StudentList() {
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
   const [students, setStudents] = useState([]);
@@ -15,17 +18,37 @@ export default function StudentList() {
   const [searchCode, setSearchCode] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const studentsPerPage = 10;
+  let studentsPerPage = 10;
 
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [downloadStudent, setDownloadStudent] = useState(false);
 
   const fetchStudents = async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get(
-        `/student/all?page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`
+        `/student/all?userMail=${user?.email}&page=${currentPage}&limit=${studentsPerPage}&semester=${semester}&subjectCode=${searchCode}`
+      );
+
+      // console.log("fetchData");
+      if (response) {
+        setStudents(response?.data?.data?.res);
+        setTotalPages(response?.data?.data?.meta?.totalPage);
+      }
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to fetch students");
+      setLoading(false);
+    }
+  };
+  // fetch all students
+  const fetchAllStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosSecure.get(
+        `/student/all?userMail=${user?.email}&subjectCode=${searchCode}`
       );
 
       console.log("fetchData");
@@ -45,7 +68,7 @@ export default function StudentList() {
     fetchStudents();
     setLoading(false);
   }, [currentPage, semester, searchCode]);
-
+  // delete single student
   const handleDelete = async (id) => {
     try {
       setLoading(true);
@@ -63,7 +86,21 @@ export default function StudentList() {
       setLoading(false);
     }
   };
-
+  // delete all students by email
+  const handleDeleteMany = async () => {
+    try {
+      setLoading(true);
+      await axiosSecure.delete(`/student/deleteMany/${user.email}`);
+      toast.success("Student deleted successfully");
+      setShowDeleteConfirm(false);
+      fetchStudents();
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to delete student");
+      setLoading(false);
+    }
+  };
+  // update single student
   const handleUpdate = async (id, updatedData) => {
     try {
       setLoading(true);
@@ -81,7 +118,17 @@ export default function StudentList() {
     }
   };
 
-  console.log(loading);
+  const handleDownload = async () => {
+    try {
+      setShowUpdateModal(true)
+      fetchAllStudents();
+    } catch (error) {
+      console.log(error);
+      toast.error("Download Failed");
+    }
+  };
+
+  console.log(setShowUpdateModal,setDownloadStudent);
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -108,8 +155,22 @@ export default function StudentList() {
             onChange={(e) => setSearchCode(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-md flex-1"
           />
+          <button
+            onClick={handleDeleteMany}
+            className="px-4 py-2 bg-blue-500 flex justify-center items-center gap-1 hover:bg-blue-700 text-white  font-semibold rounded-md "
+          >
+            <Trash2 /> <span> Delete All </span>
+          </button>
+          {searchCode && (
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 bg-blue-500 flex justify-center items-center gap-1 hover:bg-blue-700 text-white  font-semibold rounded-md "
+            >
+              <Download /> <span> Download Student List </span>
+            </button>
+          )}
         </div>
-
+        {/* student list is here */}
         <div className="bg-white rounded-lg shadow-md overflow-x-auto">
           {loading ? (
             <div className="w-full">
@@ -218,6 +279,15 @@ export default function StudentList() {
           onCancel={() => {
             setShowDeleteConfirm(false);
             setSelectedStudent(null);
+          }}
+        />
+      )}
+      {downloadStudent  && (
+        <DownloadStudent
+          students={students}
+          searchCode={searchCode}
+          onClose={() => {
+            setDownloadStudent(false);
           }}
         />
       )}

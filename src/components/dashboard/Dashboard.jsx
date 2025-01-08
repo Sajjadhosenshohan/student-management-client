@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useAxiosSecure } from "../../Hooks/useAxiosSecure";
+import { AuthContext } from "../../Auth/AuthProvider";
 
 export default function Dashboard() {
   const axiosSecure = useAxiosSecure();
+    const {user} = useContext(AuthContext)
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     regulationYear: "",
     semester: "",
+    userMail:""
   });
+  
   // const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -27,6 +31,7 @@ export default function Dashboard() {
     formDataToSend.append("file", file);
     formDataToSend.append("regulationYear", formData.regulationYear);
     formDataToSend.append("semester", formData.semester);
+    formDataToSend.append("userMail", user?.email);
     // Log the FormData entries
     for (let [key, value] of formDataToSend.entries()) {
       console.log(`${key}:`, value);

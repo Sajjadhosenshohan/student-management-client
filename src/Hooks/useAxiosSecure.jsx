@@ -3,8 +3,8 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../Auth/AuthProvider";
 
 const axiosSecure = axios.create({
-  baseURL: "https://rpistudentmanagementserver.vercel.app/api/v1",
-  // baseURL: "http://localhost:5000/api/v1",
+  // baseURL: "https://rpistudentmanagementserver.vercel.app/api/v1",
+  baseURL: "http://localhost:5000/api/v1",
   timeout: 300000,
   headers: {
     "Content-Type": "application/json",
