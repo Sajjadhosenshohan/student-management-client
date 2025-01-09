@@ -120,7 +120,7 @@ export default function StudentList() {
 
   const handleDownload = async () => {
     try {
-      setShowUpdateModal(true)
+      setDownloadStudent(!downloadStudent)
       fetchAllStudents();
     } catch (error) {
       console.log(error);
@@ -130,7 +130,7 @@ export default function StudentList() {
 
   console.log(setShowUpdateModal,setDownloadStudent);
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+    <div className="min-h-screen relative bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Student List</h1>
 
